@@ -1,0 +1,47 @@
+name: Proxy CI
+
+on:
+  push:
+    # Run on the main branch
+    branches:
+      - main
+  # Also on PRs, just be careful not to publish anything
+  pull_request:
+  # Allow to be called from other workflows (like "release")
+  workflow_call:
+  # But don't trigger on tags, as they are covered by the "release.yaml" workflow
+
+jobs:
+  proxy-fails-build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Install policy server
+        run: curl -L -s --output swio https://github.com/seedwing-io/seedwing-policy/releases/download/v0.1.0-nightly.b1769553/swio-linux-amd64 && chmod 755 swio
+
+      - name: Install proxy
+        run: curl -L -s https://github.com/seedwing-io/seedwing-proxy/releases/download/v0.1.0-alpha.2/seedwing-proxy-x86_64-unknown-linux-gnu.tar.gz | tar xzf - seedwing-proxy
+
+      - name: Run proxy in background
+        run: ./seedwing-proxy -c config/proxy.toml &
+
+      - name: Run policy server in background
+        run: ./swio serve -p policies &
+
+      - name: Verify servers are up
+        run: |
+          for x in {1..20}; do sleep 1; date; if curl -s -o /dev/null http://0.0.0.0:8181; then echo "proxy is up"; break; fi; done
+          for x in {1..20}; do sleep 1; date; if curl -s -o /dev/null http://localhost:8080; then echo "swio is up"; break; fi; done
+
+      - name: Build java app
+        run: |
+          mkdir -p ~/.m2
+          cp config/maven-settings.xml ~/.m2/settings.xml
+          ./mvnw compile
