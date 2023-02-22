@@ -1,0 +1,11 @@
+[proxy]
+bind = "0.0.0.0"
+port = 8181
+
+[policy]
+url = 'http://localhost:8080/api/policy/v1alpha1/proxy/context?collapse=true'
+decision = "enforce"            # disable | warn | enforce
+
+[repositories.m2]
+type = "m2"
+url = "https://repo.maven.apache.org/maven2"

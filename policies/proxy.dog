@@ -1,0 +1,4 @@
+
+pattern context = {
+  purl: uri::purl | osv::scan-purl | openvex::from-osv | openvex::not-affected
+}
