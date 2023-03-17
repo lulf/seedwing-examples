@@ -24,14 +24,14 @@ jobs:
           distribution: 'adopt'
 
       - name: Test
-        run: cd java && ./mvnw -B test
+        run: ./mvnw -B test
 
       - name: Generate SBOM
-        run: cd java && ./mvnw -B package
+        run: ./mvnw -B package
 
       - name: Apply company policies for the project SBOM
         uses: seedwing-io/seedwing-action@v3
         with:
           policy-dir: policies
           name: company::check-sbom
-          input: java/target/bom.json
+          input: target/bom.json
