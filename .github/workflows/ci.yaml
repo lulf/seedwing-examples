@@ -12,7 +12,7 @@ on:
   # But don't trigger on tags, as they are covered by the "release.yaml" workflow
 
 jobs:
-  policy-vulnerability-check:
+  policy-action:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
