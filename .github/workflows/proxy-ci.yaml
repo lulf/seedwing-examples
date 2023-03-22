@@ -27,10 +27,10 @@ jobs:
         run: curl -L -s --output swio https://github.com/seedwing-io/seedwing-policy/releases/download/v0.1.0-nightly.b1769553/swio-linux-amd64 && chmod 755 swio
 
       - name: Install proxy
-        run: curl -L -s https://github.com/seedwing-io/seedwing-proxy/releases/download/v0.1.0-alpha.2/seedwing-proxy-x86_64-unknown-linux-gnu.tar.gz | tar xzf - seedwing-proxy
+        run: curl -L -s https://github.com/seedwing-io/seedwing-proxy/releases/download/v0.1.0-alpha.3/seedwing-proxy-x86_64-unknown-linux-gnu.tar.gz | tar xzf - seedwing-proxy
 
       - name: Run proxy in background
-        run: ./seedwing-proxy -c config/proxy.toml &
+        run: ./seedwing-proxy -c config/proxy.toml >/tmp/proxy.log 2>&1 &
 
       - name: Run policy server in background
         run: ./swio serve -p policies &
@@ -41,7 +41,14 @@ jobs:
           for x in {1..20}; do sleep 1; date; if curl -s -o /dev/null http://localhost:8080; then echo "swio is up"; break; fi; done
 
       - name: Build java app
+        continue-on-error: true
         run: |
           mkdir -p ~/.m2
           cp config/maven-settings.xml ~/.m2/settings.xml
           ./mvnw compile
+
+      - name: Log proxy output and verify failure
+        run: |
+          cat /tmp/proxy.log
+          echo "Rejected requests:"
+          grep -e '"GET .*" 422 ' /tmp/proxy.log
