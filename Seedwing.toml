@@ -1,0 +1,4 @@
+[policy]
+dirs = ["policies"]
+inputs = ["target/bom.json"]
+required = ["vulnerabilities::not-affected"]

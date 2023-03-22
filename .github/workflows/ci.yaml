@@ -29,9 +29,5 @@ jobs:
       - name: Generate SBOM
         run: ./mvnw -B package
 
-      - name: Apply company policies for the project SBOM
-        uses: seedwing-io/seedwing-action@v3
-        with:
-          policy-dir: policies
-          name: company::check-sbom
-          input: target/bom.json
+      - name: Apply policies according to configuration
+        uses: seedwing-io/policy-action@v1
