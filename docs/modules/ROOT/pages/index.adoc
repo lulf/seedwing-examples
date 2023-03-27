@@ -5,7 +5,7 @@ Example Java project integrating with Seedwing.
 This example consists the following:
 
 * A link:https://github.com/seedwing-io/seedwing-java-example[Java application] with the CycloneDX maven plugin enabled.
-* A link:https://github.com/seedwing-io/seedwing-java-example/blob/main/.github/workflows/ci.yam[GitHub Actions Workflow] that contains an example CI pipeline that builds the SBOM and performs policy checks using Seedwing.
+* A link:https://github.com/seedwing-io/seedwing-java-example/blob/main/.github/workflows/ci.yaml[GitHub Actions Workflow] that contains an example CI pipeline that builds the SBOM and performs policy checks using Seedwing.
 * A link:https://github.com/seedwing-io/seedwing-java-example/blob/main/Seedwing.toml[Seedwing Config] file that configures the GHA.
 * An link:https://github.com/seedwing-io/seedwing-java-example/blob/main/.github/workflows/proxy-ci.yaml[alternative workflow] that configures maven to fetch the app's dependencies through the link:https://github.com/seedwing-io/seedwing-proxy[seedwing-proxy].
 * A link:https://github.com/seedwing-io/seedwing-java-example/tree/main/policies[set of policies] that are applied at different stages in the CI pipelines.
